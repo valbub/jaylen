@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 
 
 class MainWindow(QtGui.QMainWindow):
 
   def __init__(self):
     super(MainWindow, self).__init__()
+    self.tree = QtGui.QTreeView(self)
+    self.tabs = QtGui.QTabWidget(self)
     self.init()
 
   def init(self):
@@ -14,8 +17,9 @@ class MainWindow(QtGui.QMainWindow):
     self.center()
     self.setWindowTitle('%s - %s' % ("Jaylen", "0.1.0"))
     self.setWindowIcon(QtGui.QIcon('resources/main.png'))
-    self.statusBar().showMessage('ready')
+    self.statusBar().showMessage('Ready')
     self.buildMainMenu()
+    self.buildLayout()
     self.show()
 
   def closeEvent(self, event):
@@ -34,10 +38,18 @@ class MainWindow(QtGui.QMainWindow):
     self.move(frameGeometry.topLeft())
 
   def buildMainMenu(self):
-    exitAction = QtGui.QAction('&Exit', self)
+    exitAction = QtGui.QAction(QtGui.QIcon('resources/close.png'), '&Exit', self)
     exitAction.setShortcut('Ctrl+Q')
     exitAction.setStatusTip('Exit application')
     exitAction.triggered.connect(QtGui.qApp.quit)
     menuBar = self.menuBar()
     fileMenu = menuBar.addMenu('&File')
     fileMenu.addAction(exitAction)
+
+  def buildLayout(self):
+    splitter = QtGui.QSplitter(QtCore.Qt.Horizontal)
+    splitter.addWidget(self.tree)
+    splitter.addWidget(self.tabs)
+    splitter.setSizes((2, 5))
+    self.setCentralWidget(splitter)
+
